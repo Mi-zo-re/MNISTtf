@@ -11,22 +11,26 @@ sess = tf.InteractiveSession()
 x = tf.placeholder("float", shape=[None, 784])
 y_ = tf.placeholder("float", shape=[None, 10])
 
+
 # 权重初始化函数
 def weight_variable(shape):
     # 输出服从结尾正态分布的随机值
     initial = tf.truncated_normal(shape, stddev=0.1)
     return tf.Variable(initial)
 
+
 # 偏置初始化函数
 def bias_variable(shape):
     initial = tf.constant(0.1, shape=shape)
     return tf.Variable(initial)
+
 
 # 创建卷积op
 # x是一个4维张量，shape为[batch, height, width, channels]
 # 卷积核移动步长为1，填充类型为SAME可以不丢弃任何像素点
 def conv2d(x, W):
     return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+
 
 # 创建池化op
 # 采用最大池化，也就是取窗口中的最大值作为结果
@@ -35,6 +39,7 @@ def conv2d(x, W):
 # strides表示在height和width维度上的步长都是2
 def max_pool_2x2(x):
     return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding="SAME")
+
 
 # 第一层卷积层
 # 初始化W为[5, 5, 1, 32]的张量，表示剪辑和大小为5x5，第一层网路的输入和输出神经元个数为1和32
