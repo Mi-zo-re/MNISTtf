@@ -23,7 +23,7 @@ class Network:
         self.h_pool1 = self.max_pool_2x2(self.h_conv1)
 
         # 第二层卷积层
-        # 卷积核大小依然为5x5，这层的输入和输出神经单元个数俄日32和64
+        # 卷积核大小依然为5x5，这层的输入和输出神经单元个数是32和64
         self.W_conv2 = self.weight_variable([5, 5, 32, 64])
         self.b_conv2 = self.weight_variable([64])
 
@@ -52,17 +52,17 @@ class Network:
         self.W_fc2 = self.weight_variable([1024, 10])
         self.b_fc2 = self.bias_variable([10])
 
-        self.y_conv = tf.nn.softmax(tf.matmul(self.h_fc1_drop, self.W_fc2) + self.b_fc2)
+        self.y = tf.nn.softmax(tf.matmul(self.h_fc1_drop, self.W_fc2) + self.b_fc2)
 
-        # 预测值和真是只之间的交叉熵
-        self.cross_entropy = -tf.reduce_sum(self.y_ * tf.log(self.y_conv))
+        # 预测值和真实值之间的交叉熵
+        self.cross_entropy = -tf.reduce_sum(self.y_ * tf.log(self.y))
 
         # train op，使用ADAM优化器来做梯度下降，学习率为0.0001
         self.train_step = tf.train.AdamOptimizer(1e-4).minimize(self.cross_entropy)
 
         # 评估模型，tf.argmax能给出某个tensor对象在某一维度上数据最大值的索引
         # 因为标签是由0，1组成了one_hot vector，返回的索引就是数值为1的位置
-        self.correct_predict = tf.equal(tf.argmax(self.y_conv, 1), tf.argmax(self.y_, 1))
+        self.correct_predict = tf.equal(tf.argmax(self.y, 1), tf.argmax(self.y_, 1))
 
         # 计算正确预测项的比例，因为tf.equal返回的是布尔值
         # 使用tf.cast把布尔值转化成浮点数，然后用tf.reduce_mean求平均值
@@ -85,7 +85,7 @@ class Network:
     def conv2d(self, x, W):
         return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
 
-    # # 创建池化op
+    # 创建池化op
     # 采用最大池化，也就是取窗口中的最大值作为结果
     # x是一个4维张量，shape为[batch, height, width, channels]
     # ksize表示pool窗口大小为2x2，也就是高2宽2

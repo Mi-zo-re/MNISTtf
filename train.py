@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 from model import Network
 
+
 class Train:
     def __init__(self):
         self.net = Network()
